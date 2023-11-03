@@ -1,0 +1,101 @@
+version: "3"
+
+services:
+  roach1:
+    container_name: roach1
+    hostname: roach1
+    image: cockroachdb/cockroach:v22.2.15
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    restart: "always"
+    command:
+      - start
+      - --advertise-addr=roach1:26357
+      - --listen-addr=roach1:26357
+      - --http-addr=roach1:8080
+      - --sql-addr=roach1:26257
+      - --join=roach1:26357,roach2:26357,roach3:26357
+      - --insecure
+    networks:
+      - base-project
+    volumes:
+      - type: bind
+        source: ./roach1/data
+        target: /cockroach/cockroach-data
+
+  roach2:
+    container_name: roach2
+    hostname: roach2
+    image: cockroachdb/cockroach:v22.2.15
+    ports:
+      - "26258:26258"
+      - "8081:8081"
+    restart: "always"
+    command:
+      - start
+      - --advertise-addr=roach2:26357
+      - --listen-addr=roach2:26357
+      - --http-addr=roach2:8081
+      - --sql-addr=roach2:26258
+      - --join=roach1:26357,roach2:26357,roach3:26357
+      - --insecure
+      - --background
+    networks:
+      - base-project
+    volumes:
+      - type: bind
+        source: ./roach2/data
+        target: /cockroach/cockroach-data
+
+  roach3:
+    container_name: roach3
+    hostname: roach3
+    image: cockroachdb/cockroach:v22.2.15
+    ports:
+      - "26259:26259"
+      - "8082:8082"
+    restart: "always"
+    command:
+      - start
+      - --advertise-addr=roach3:26357
+      - --listen-addr=roach3:26357
+      - --http-addr=roach3:8082
+      - --sql-addr=roach3:26259
+      - --join=roach1:26357,roach2:26357,roach3:26357
+      - --insecure
+      - --background
+    networks:
+      - base-project
+    volumes:
+      - type: bind
+        source: ./roach3/data
+        target: /cockroach/cockroach-data
+
+  roach4:
+    container_name: roach4
+    hostname: roach4
+    image: cockroachdb/cockroach:v22.2.15
+    ports:
+      - "26260:26260"
+      - "8083:8083"
+    restart: "always"
+    command:
+      - start
+      - --advertise-addr=roach4:26357
+      - --listen-addr=roach4:26357
+      - --http-addr=roach4:8083
+      - --sql-addr=roach4:26260
+      - --join=roach1:26357,roach2:26357,roach3:26357,roach4:26357
+      - --insecure
+      - --background
+    networks:
+      - base-project
+    volumes:
+      - type: bind
+        source: ./roach4/data
+        target: /cockroach/cockroach-data
+
+networks:
+  base-project:
+    external: true
