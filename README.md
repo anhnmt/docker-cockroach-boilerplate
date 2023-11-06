@@ -5,11 +5,5 @@
 
 
 ```bash
-        start \
-      --advertise-addr=roach1:26357 \
-      --listen-addr=roach1:26357 \
-      --http-addr=roach1:8080 \
-      --sql-addr=roach1:26257 \
-      --join=roach1:26357,roach2:26357 \
-      --insecure
+./cockroach sql --host=roach1:26258 --insecure
 ```
