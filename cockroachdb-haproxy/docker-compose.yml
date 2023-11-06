@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  haproxy:
+    container_name: haproxy
+    image: haproxy:2.8
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+      - "8081:8081"
+    restart: "always"
+    networks:
+      - base-project
+    volumes:
+      - type: bind
+        source: ./haproxy.cfg
+        target: /usr/local/etc/haproxy/haproxy.cfg
+
+  cockroach1:
+    container_name: cockroach1
+    hostname: cockroach1
+    image: cockroachdb/cockroach:v23.1.11
+    restart: "always"
+    command:
+      - start
+      - --advertise-addr=cockroach1:26357
+      - --listen-addr=cockroach1:26357
+      - --http-addr=cockroach1:8080
+      - --sql-addr=cockroach1:26257
+      - --join=haproxy:26357
+      - --insecure
+    networks:
+      - base-project
+    volumes:
+      - type: bind
+        source: ./cockroach1/data
+        target: /cockroach/cockroach-data
+
+networks:
+  base-project:
+    external: true
