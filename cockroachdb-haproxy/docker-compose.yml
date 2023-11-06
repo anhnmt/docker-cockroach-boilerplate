@@ -16,24 +16,44 @@ services:
         source: ./haproxy.cfg
         target: /usr/local/etc/haproxy/haproxy.cfg
 
-  cockroach1:
-    container_name: cockroach1
-    hostname: cockroach1
+  roach1:
+    container_name: roach1
+    hostname: roach1
     image: cockroachdb/cockroach:v23.1.11
     restart: "always"
     command:
       - start
-      - --advertise-addr=cockroach1:26357
-      - --listen-addr=cockroach1:26357
-      - --http-addr=cockroach1:8080
-      - --sql-addr=cockroach1:26257
-      - --join=haproxy:26357
+      - --advertise-addr=roach1:26357
+      - --listen-addr=roach1:26357
+      - --http-addr=roach1:8080
+      - --sql-addr=roach1:26257
+      - --join=roach1:26357,haproxy:26357
       - --insecure
     networks:
       - base-project
     volumes:
       - type: bind
-        source: ./cockroach1/data
+        source: ./roach1/data
+        target: /cockroach/cockroach-data
+
+  roach2:
+    container_name: roach2
+    hostname: roach2
+    image: cockroachdb/cockroach:v23.1.11
+    restart: "always"
+    command:
+      - start
+      - --advertise-addr=roach2:26357
+      - --listen-addr=roach2:26357
+      - --http-addr=roach2:8080
+      - --sql-addr=roach2:26257
+      - --join=roach1:26357,haproxy:26357
+      - --insecure
+    networks:
+      - base-project
+    volumes:
+      - type: bind
+        source: ./roach2/data
         target: /cockroach/cockroach-data
 
 networks:
