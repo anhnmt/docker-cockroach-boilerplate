@@ -5,5 +5,5 @@
 
 
 ```bash
-./cockroach sql --host=roach1:26258 --insecure
+./cockroach --host=roach1:26357 init --insecure
 ```
