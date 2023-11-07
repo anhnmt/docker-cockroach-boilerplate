@@ -27,7 +27,7 @@ services:
       - --listen-addr=roach1:26357
       - --http-addr=roach1:8080
       - --sql-addr=roach1:26257
-      - --join=roach1:26357,haproxy:26357
+      - --join=roach1:26357
       - --insecure
     networks:
       - base-project
@@ -47,7 +47,7 @@ services:
       - --listen-addr=roach2:26357
       - --http-addr=roach2:8080
       - --sql-addr=roach2:26257
-      - --join=roach1:26357,haproxy:26357
+      - --join=roach1:26357
       - --insecure
     networks:
       - base-project
